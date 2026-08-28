@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THAARAI — Customer Visit & Order Form</title>
+<link rel="icon" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep: #0B4F5C;
+    --teal: #0F7C8C;
+    --aqua: #3FBAC2;
+    --foam: #EAF6F6;
+    --paper: #FFFFFF;
+    --ink: #0B2E33;
+    --slate: #5C7A7E;
+    --line: #D7E9E9;
+    --amber: #E8A33D;
+    --err: #C1503F;
+    --ok: #1F7A4D;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background: var(--foam);
+    color: var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  header{
+    position:relative;
+    background: linear-gradient(135deg, var(--deep), var(--teal));
+    padding: 36px 20px 60px;
+    color:#fff;
+    overflow:hidden;
+  }
+  header .inner{max-width:720px;margin:0 auto;position:relative;z-index:2;display:flex;align-items:center;gap:18px;}
+  header .logo{
+    width:60px;height:60px;border-radius:50%;
+    box-shadow:0 4px 16px rgba(0,0,0,0.25);
+    flex-shrink:0;background:#fff;object-fit:cover;
+  }
+  .eyebrow{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--aqua);font-weight:600;margin:0 0 6px;}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,5.5vw,34px);margin:0 0 4px;font-weight:700;letter-spacing:-0.01em;}
+  header p.sub{margin:0;color:#CFEBEB;font-size:14px;max-width:480px;}
+  header svg.wave{position:absolute;bottom:-2px;left:0;width:100%;height:50px;z-index:1;}
+
+  main{max-width:720px;margin:-30px auto 0;padding:0 20px 80px;position:relative;z-index:3;}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 24px;
+    box-shadow:0 10px 30px rgba(11,79,92,0.10);
+  }
+
+  fieldset{border:none;margin:0 0 4px;padding:0;}
+  legend{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--deep);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    padding:0;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  legend .drop{width:8px;height:8px;border-radius:50% 50% 50% 0;background:var(--aqua);transform:rotate(45deg);flex-shrink:0;}
+  .section{padding:20px 0;border-bottom:1px dashed var(--line);}
+  .section:first-of-type{padding-top:0;}
+  .section:last-of-type{border-bottom:none;padding-bottom:6px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:12.5px;font-weight:600;color:var(--deep);letter-spacing:.01em;}
+  input, textarea, select{
+    font-family:'Inter',sans-serif;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    padding:11px 12px;
+    font-size:14.5px;
+    color:var(--ink);
+    background:#fcfefe;
+    outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+    width:100%;
+  }
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C7A7E' stroke-width='1.6' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  input:focus, textarea:focus, select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,124,140,0.14);}
+  textarea{resize:vertical;min-height:60px;}
+
+  .radio-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .radio-pill{
+    flex:1;min-width:120px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    padding:11px 14px;
+    text-align:center;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--slate);
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .radio-pill input{display:none;}
+  .radio-pill.checked{background:var(--deep);border-color:var(--deep);color:#fff;}
+
+  .conditional{display:none;}
+  .conditional.show{display:block;animation:fadein .2s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+  button.submit{
+    margin-top:8px;width:100%;background:var(--deep);color:#fff;border:none;
+    border-radius:10px;padding:15px 16px;font-size:15px;font-weight:600;cursor:pointer;
+    font-family:'Space Grotesk',sans-serif;letter-spacing:.01em;
+    transition:background .15s ease, transform .1s ease;
+  }
+  button.submit:hover{background:var(--teal);}
+  button.submit:active{transform:scale(0.99);}
+  button.submit:disabled{background:var(--slate);cursor:not-allowed;}
+
+  .status{margin-top:14px;padding:12px 14px;border-radius:9px;font-size:13.5px;display:none;font-weight:500;}
+  .status.ok{display:block;background:#E4F6EC;color:var(--ok);border:1px solid #BEE9D2;}
+  .status.bad{display:block;background:#FBEAE7;color:var(--err);border:1px solid #F2CCC4;}
+
+  .setup-flag{max-width:720px;margin:16px auto 0;padding:0 20px;}
+  .setup-flag .box{background:#FFF6E8;border:1px solid #F0DBB0;color:#8A5A15;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.5;}
+
+  footer{text-align:center;color:var(--slate);font-size:12px;padding:20px;}
+
+  @media (max-width:520px){
+    .grid{grid-template-columns:1fr;}
+    header .logo{width:46px;height:46px;}
+    header .inner{gap:12px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <img src="logo.jpg" alt="Thaarai logo" class="logo">
+    <div>
+      <p class="eyebrow">Where Purity Flows</p>
+      <h1>Customer Visit & Order Form</h1>
+      <p class="sub">Sales executives — fill this for every customer visit, accurately.</p>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 50" preserveAspectRatio="none">
+    <path fill="#EAF6F6" d="M0,28 C240,50 480,0 720,15 C960,30 1200,45 1440,20 L1440,50 L0,50 Z"></path>
+  </svg>
+</header>
+
+<div class="setup-flag" id="setupFlag" style="display:none;">
+  <div class="box">
+    ⚠️ <strong>Backend not connected yet.</strong> Open <code>index.html</code> in a text editor and replace <code>SCRIPT_URL</code> near the bottom with your Google Apps Script Web App URL. See the README for setup steps.
+  </div>
+</div>
+
+<main>
+  <div class="card">
+    <form id="visitForm">
+
+      <!-- SALES EXECUTIVE DETAILS -->
+      <div class="section">
+        <fieldset>
+          <legend><span class="drop"></span>Sales Executive Details</legend>
+          <div class="grid">
+            <div class="field full"><label>Sales Executive Name</label><input type="text" name="exec_name" required></div>
+            <div class="field"><label>Date</label><input type="date" name="date" required></div>
+            <div class="field"><label>Time</label><input type="time" name="time" required></div>
+            <div class="field full">
+              <label>District</label>
+              <select name="district" required>
+                <option value="">Select district</option>
+                <option>Ariyalur</option><option>Chengalpattu</option><option>Chennai</option>
+                <option>Coimbatore</option><option>Cuddalore</option><option>Dharmapuri</option>
+                <option>Dindigul</option><option>Erode</option><option>Kallakurichi</option>
+                <option>Kanchipuram</option><option>Kanyakumari</option><option>Karur</option>
+                <option>Krishnagiri</option><option>Madurai</option><option>Mayiladuthurai</option>
+                <option>Nagapattinam</option><option>Namakkal</option><option>Nilgiris</option>
+                <option>Perambalur</option><option>Pudukkottai</option><option>Ramanathapuram</option>
+                <option>Ranipet</option><option>Salem</option><option>Sivaganga</option>
+                <option>Tenkasi</option><option>Thanjavur</option><option>Theni</option>
+                <option>Thoothukudi</option><option>Tiruchirappalli</option><option>Tirunelveli</option>
+                <option>Tirupathur</option><option>Tiruppur</option><option>Tiruvallur</option>
+                <option>Tiruvannamalai</option><option>Tiruvarur</option><option>Vellore</option>
+                <option>Viluppuram</option><option>Virudhunagar</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- CUSTOMER STATUS -->
+      <div class="section">
+        <fieldset>
+          <legend><span class="drop"></span>Customer Status</legend>
+          <div class="radio-row" id="customerStatusRow">
+            <label class="radio-pill" data-value="New Customer"><input type="radio" name="customer_status" value="New Customer" required>New Customer</label>
+            <label class="radio-pill" data-value="Existing Customer"><input type="radio" name="customer_status" value="Existing Customer">Existing Customer</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- NEW CUSTOMER DETAILS -->
+      <div class="section conditional" id="newCustomerSection">
+        <fieldset>
+          <legend><span class="drop"></span>New Customer Details</legend>
+          <div class="grid">
+            <div class="field full">
+              <label>Customer Type</label>
+              <select name="customer_type">
+                <option value="">Select type</option>
+                <option>Retail Shop</option>
+                <option>Wholesale / Distributor</option>
+                <option>HoReCa (Hotel / Restaurant / Catering)</option>
+                <option>Office / Corporate</option>
+                <option>Household / Direct Consumer</option>
+                <option>Event / Function</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field full"><label>Customer / Shop Name</label><input type="text" name="customer_name"></div>
+            <div class="field"><label>Customer Mobile Number</label><input type="tel" name="customer_mobile" pattern="[0-9]{10}" maxlength="10"></div>
+            <div class="field full"><label>Customer Address</label><textarea name="customer_address"></textarea></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- EXISTING CUSTOMER -->
+      <div class="section conditional" id="existingCustomerSection">
+        <fieldset>
+          <legend><span class="drop"></span>Existing Customer</legend>
+          <div class="grid">
+            <div class="field full"><label>Customer Code</label><input type="text" name="customer_code"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- ORDER STATUS -->
+      <div class="section">
+        <fieldset>
+          <legend><span class="drop"></span>Order Status</legend>
+          <label style="display:block;margin-bottom:10px;">Did customer place order?</label>
+          <div class="radio-row" id="orderStatusRow">
+            <label class="radio-pill" data-value="Yes"><input type="radio" name="order_placed" value="Yes" required>Yes</label>
+            <label class="radio-pill" data-value="No"><input type="radio" name="order_placed" value="No">No</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- ORDER DETAILS -->
+      <div class="section conditional" id="orderDetailsSection">
+        <fieldset>
+          <legend><span class="drop"></span>Order Details</legend>
+          <div class="grid">
+            <div class="field"><label>300ml Case</label><input type="number" name="order_300ml" min="0"></div>
+            <div class="field"><label>500ml Case</label><input type="number" name="order_500ml" min="0"></div>
+            <div class="field"><label>1 Litre Case</label><input type="number" name="order_1l" min="0"></div>
+            <div class="field"><label>20L Can (with can)</label><input type="number" name="order_20l_with_can" min="0"></div>
+            <div class="field"><label>20L Can (without can)</label><input type="number" name="order_20l_without_can" min="0"></div>
+            <div class="field"><label>Delivery Date</label><input type="date" name="delivery_date"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- PAYMENT DETAILS -->
+      <div class="section">
+        <fieldset>
+          <legend><span class="drop"></span>Payment Details</legend>
+          <div class="grid">
+            <div class="field full">
+              <label>Payment Status</label>
+              <select name="payment_status">
+                <option value="">Select status</option>
+                <option>Fully Paid</option>
+                <option>Partially Paid</option>
+                <option>Pending / Credit</option>
+                <option>Not Applicable</option>
+              </select>
+            </div>
+            <div class="field"><label>Amount Collected (₹)</label><input type="number" name="amount_collected" min="0" step="0.01"></div>
+            <div class="field">
+              <label>Payment Mode</label>
+              <select name="payment_mode">
+                <option value="">Select mode</option>
+                <option>Cash</option>
+                <option>UPI</option>
+                <option>Bank Transfer</option>
+                <option>Cheque</option>
+                <option>Not Applicable</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- FOLLOW UP / REMARKS -->
+      <div class="section">
+        <fieldset>
+          <legend><span class="drop"></span>Follow Up / Remarks</legend>
+          <div class="field full"><label>Remarks</label><textarea name="remarks" placeholder="Any notes, follow-up plan, objections, etc."></textarea></div>
+        </fieldset>
+      </div>
+
+      <button class="submit" type="submit">Submit Visit Report</button>
+      <div class="status" id="status"></div>
+    </form>
+  </div>
+</main>
+
+<footer>THAARAI · customer visit records, kept simple</footer>
+
+<script>
+  // ====== CONFIGURE THIS ======
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxm-68ytnimTIFUtZ4Gt5Qg6cFLJwqShRe-Kz7P0cSGGcVO2WWnp--Nt3mLyMbp-roMjw/exec";
+  // =============================
+
+  if (SCRIPT_URL === "SCRIPT_URL") {
+    document.getElementById('setupFlag').style.display = 'block';
+  }
+
+  // Default date/time = now
+  const dateInputs = document.querySelectorAll('input[type="date"]');
+  document.querySelector('input[name="date"]').valueAsDate = new Date();
+  const now = new Date();
+  document.querySelector('input[name="time"]').value = now.toTimeString().slice(0,5);
+
+  // Radio pill styling + toggle logic
+  function setupRadioGroup(rowId, onChange) {
+    const row = document.getElementById(rowId);
+    const pills = row.querySelectorAll('.radio-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('checked'));
+        pill.classList.add('checked');
+        pill.querySelector('input').checked = true;
+        onChange(pill.dataset.value);
+      });
+    });
+  }
+
+  setupRadioGroup('customerStatusRow', (value) => {
+    document.getElementById('newCustomerSection').classList.toggle('show', value === 'New Customer');
+    document.getElementById('existingCustomerSection').classList.toggle('show', value === 'Existing Customer');
+  });
+
+  setupRadioGroup('orderStatusRow', (value) => {
+    document.getElementById('orderDetailsSection').classList.toggle('show', value === 'Yes');
+  });
+
+  // Submit
+  const form = document.getElementById('visitForm');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button.submit');
+    status.style.display = 'none';
+
+    if (SCRIPT_URL === "SCRIPT_URL") {
+      status.className = 'status bad';
+      status.textContent = 'Backend not connected yet — set SCRIPT_URL in index.html first.';
+      status.style.display = 'block';
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    data.sheet = 'CustomerVisits';
+    data.submitted_at = new Date().toISOString();
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+      status.className = 'status ok';
+      status.textContent = 'Saved ✓ Visit report submitted successfully.';
+      status.style.display = 'block';
+      form.reset();
+      document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('checked'));
+      document.querySelectorAll('.conditional').forEach(c => c.classList.remove('show'));
+      document.querySelector('input[name="date"]').valueAsDate = new Date();
+      document.querySelector('input[name="time"]').value = new Date().toTimeString().slice(0,5);
+    } catch (err) {
+      status.className = 'status bad';
+      status.textContent = 'Could not save — check your internet connection and try again.';
+      status.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Visit Report';
+    }
+  });
+</script>
+
+</body>
+</html>
